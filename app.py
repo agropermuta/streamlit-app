@@ -23,7 +23,7 @@ if st.button('Simular'):
         "data_desconto": "2024-03-24"
     }
     
-    response = requests.post('http://agropermuta.onrender.com/simulador', json=data)
+    response = requests.post('https://api-ksh6.onrender.com/simulador', json=data)
 
     def format_currency(value):
         return 'R$ ' + f'{value:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
