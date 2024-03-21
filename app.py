@@ -15,6 +15,7 @@ if st.button('Simular'):
         "valor_bem": valor_bem,
         "entrada": st.secrets["api"]["entrada"],
         "vencimento_primeira_parcela": st.secrets["api"]["vencimento_primeira_parcela"],
+        "vencimento_primeira_parcela": st.secrets["api"]["vencimento_segunda_parcela"],
         "taxa_seguro": st.secrets["api"]["taxa_seguro"],
         "custo_rastreador": st.secrets["api"]["custo_rastreador"],
         "capitalizacao_ano": st.secrets["api"]["capitalizacao_ano"],
