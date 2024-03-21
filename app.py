@@ -11,16 +11,16 @@ valor_bem = st.number_input('Valor', min_value=0.0, format='%f')
 if st.button('Simular'):
     # Call the API with all parameters
     data = {
-        "data_inicial": date.today().strftime("%Y-%m-%d"),
+        "data_inicial": st.secrets["api"]["data_inicial"],
         "valor_bem": valor_bem,
-        "entrada": 0,
-        "vencimento_primeira_parcela": "2024-10-30",
-        "taxa_seguro": 0.03,
-        "custo_rastreador": 3500.00,
-        "capitalizacao_ano": 0.0975,
-        "numero_parcelas": 6,
-        "taxa_desagio": 0.0155,
-        "data_desconto": "2024-03-24"
+        "entrada": st.secrets["api"]["entrada"],
+        "vencimento_primeira_parcela": st.secrets["api"]["vencimento_primeira_parcela"],
+        "taxa_seguro": st.secrets["api"]["taxa_seguro"],
+        "custo_rastreador": st.secrets["api"]["custo_rastreador"],
+        "capitalizacao_ano": st.secrets["api"]["capitalizacao_ano"],
+        "numero_parcelas": st.secrets["api"]["numero_parcelas"],
+        "taxa_desagio": st.secrets["api"]["taxa_desagio"],
+        "data_desconto": st.secrets["api"]["data_desconto"]
     }
     
     response = requests.post('https://api-ksh6.onrender.com/simulador', json=data)
@@ -35,20 +35,13 @@ if st.button('Simular'):
         df = pd.DataFrame(response.json())
         df = df.round(2)
 
-        if '@agropermuta.com.br' not in email:
-            df = df[['pmt', 'Periodicidade', 'Parcela']]
-            df.rename(columns={'pmt': 'Parcela', 'Periodicidade': 'Vencimento', 'Parcela': 'Valor da Parcela'}, inplace=True)
-            df['Vencimento'] = pd.to_datetime(df['Vencimento']).dt.strftime('%d/%m/%Y')
-            df['Valor da Parcela'] = df['Valor da Parcela'].apply(format_currency)
-        
-        else:
-            df['Periodicidade'] = pd.to_datetime(df['Periodicidade']).dt.strftime('%d/%m/%Y')
-            df['Principal'] = df['Principal'].apply(format_number)
-            df['Seguro'] = df['Seguro'].apply(format_number)
-            df['Amortização'] = df['Amortização'].apply(format_number)
-            df['Juros'] = df['Juros'].apply(format_number)
-            df['Parcela'] = df['Parcela'].apply(format_number)
-            df['Valor Presente'] = df['Valor Presente'].apply(format_number)
+        df['Periodicidade'] = pd.to_datetime(df['Periodicidade']).dt.strftime('%d/%m/%Y')
+        df['Principal'] = df['Principal'].apply(format_number)
+        df['Seguro'] = df['Seguro'].apply(format_number)
+        df['Amortização'] = df['Amortização'].apply(format_number)
+        df['Juros'] = df['Juros'].apply(format_number)
+        df['Parcela'] = df['Parcela'].apply(format_number)
+        df['Valor Presente'] = df['Valor Presente'].apply(format_number)
 
         # Aplicando estilos CSS com o Styler
         styler = df.style.hide(axis="index").set_table_attributes('style="width:100%;"').set_properties(**{'text-align': 'center',}).set_table_styles([{
