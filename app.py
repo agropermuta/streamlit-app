@@ -35,13 +35,10 @@ if st.button('Simular'):
         df = pd.DataFrame(response.json())
         df = df.round(2)
 
-        df['Periodicidade'] = pd.to_datetime(df['Periodicidade']).dt.strftime('%d/%m/%Y')
-        df['Principal'] = df['Principal'].apply(format_number)
-        df['Seguro'] = df['Seguro'].apply(format_number)
-        df['Amortização'] = df['Amortização'].apply(format_number)
-        df['Juros'] = df['Juros'].apply(format_number)
-        df['Parcela'] = df['Parcela'].apply(format_number)
-        df['Valor Presente'] = df['Valor Presente'].apply(format_number)
+        df = df[['pmt', 'Periodicidade', 'Parcela']]
+        df.rename(columns={'pmt': 'Parcela', 'Periodicidade': 'Vencimento', 'Parcela': 'Valor da Parcela'}, inplace=True)
+        df['Vencimento'] = pd.to_datetime(df['Vencimento']).dt.strftime('%d/%m/%Y')
+        df['Valor da Parcela'] = df['Valor da Parcela'].apply(format_currency)
 
         # Aplicando estilos CSS com o Styler
         styler = df.style.hide(axis="index").set_table_attributes('style="width:100%;"').set_properties(**{'text-align': 'center',}).set_table_styles([{
