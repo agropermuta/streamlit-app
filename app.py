@@ -7,13 +7,14 @@ st.image('logo.jpg')
 
 email = st.text_input('Email')
 valor_bem = st.number_input('Valor', min_value=0.0, format='%f')
+entrada = st.number_input('Entrada', min_value=0.0, format='%f')
 
 if st.button('Simular'):
     # Call the API with all parameters
     data = {
         "data_inicial": date.today().strftime("%Y-%m-%d"),
         "valor_bem": valor_bem,
-        "entrada": st.secrets["api"]["entrada"],
+        "entrada": entrada,
         "vencimento_primeira_parcela": st.secrets["api"]["vencimento_primeira_parcela"],
         "vencimento_segunda_parcela": st.secrets["api"]["vencimento_segunda_parcela"],
         "taxa_seguro": st.secrets["api"]["taxa_seguro"],
