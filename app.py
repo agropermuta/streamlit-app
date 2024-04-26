@@ -48,7 +48,8 @@ if st.button('Simular'):
         }
 
         # Adiciona a linha da taxa de estruturação ao final do DataFrame
-        df = df.append(linha_taxa_estruturacao, ignore_index=True)
+        linha_taxa_estruturacao_df = pd.DataFrame([linha_taxa_estruturacao])
+        df = pd.concat([df, linha_taxa_estruturacao_df], ignore_index=True)
 
         df = df[['pmt', 'Periodicidade', 'Parcela']]
         df.rename(columns={'pmt': 'Parcela', 'Periodicidade': 'Vencimento', 'Parcela': 'Valor da Parcela'}, inplace=True)
