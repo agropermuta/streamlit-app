@@ -37,10 +37,26 @@ if st.button('Simular'):
         df = pd.DataFrame(response.json())
         df = df.round(2)
 
+        # Calcular a taxa de estruturação e adicionar ao DataFrame
+        taxa_estruturacao = 0.04  # 4%
+        valor_financiado = valor_bem - entrada
+        valor_taxa_estruturacao = valor_financiado * taxa_estruturacao
+        linha_taxa_estruturacao = {
+            'pmt': '<strong>Taxa de Estruturação (4%)</strong>',
+            'Peridiocidade': '',
+            'Parcela': format_currency(valor_taxa_estruturacao)
+        }
+
+        # Adiciona a linha da taxa de estruturação ao final do DataFrame
+        df = df.append(linha_taxa_estruturacao, ignore_index=True)
+
         df = df[['pmt', 'Periodicidade', 'Parcela']]
         df.rename(columns={'pmt': 'Parcela', 'Periodicidade': 'Vencimento', 'Parcela': 'Valor da Parcela'}, inplace=True)
-        df['Vencimento'] = pd.to_datetime(df['Vencimento']).dt.strftime('%d/%m/%Y')
-        df['Valor da Parcela'] = df['Valor da Parcela'].apply(format_currency)
+        df['Vencimento'] = pd.to_datetime(df['Vencimento'], errors='ignore').dt.strftime('%d/%m/%Y')
+        df['Valor da Parcela'] = df['Valor da Parcela'].apply(lambda x: format_currency(x) if isinstance(x, (int, float)) else x)
+
+        # Antes de converter o DataFrame para HTML:
+        df = df.replace({pd.NaT: "", pd.NA: "", "nan": "", "NaN": ""})
 
         # Aplicando estilos CSS com o Styler
         styler = df.style.hide(axis="index").set_table_attributes('style="width:100%;"').set_properties(**{'text-align': 'center',}).set_table_styles([{
@@ -57,9 +73,9 @@ if st.button('Simular'):
         st.markdown(
             """
             <small><br>Taxas de juros podem ser alteradas sem aviso prévio.<br></small>
-            <small>Liberação dos recursos somente após:<br></small>
-            <small>- Pagamento da Estruturação<br></small>
-            <small>- Pagamento da Entrada, caso haja</small>
+            <small><br>Nosso financiamento está condicionado a uma taxa de estruturação de 4% do valor financiado, onde estão incorridos custos operacionais como registro em cartório da alienação do bem, registro na B3, apólice do seguro e rastreador durante a duração do financiamento.<br></small>
+            <small><br>Liberação dos recursos somente após:</small>
+            <small><ul><li>Pagamento da Estruturação</li><li>Pagamento da Entrada (caso haja)</li></ul></small>
             """,
             unsafe_allow_html=True
         )
