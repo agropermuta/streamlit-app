@@ -10,6 +10,16 @@ valor_bem = st.number_input('Valor', min_value=0.0, format='%f')
 entrada = st.number_input('Entrada', min_value=0.0, format='%f')
 
 if st.button('Simular'):
+    # Get URL and API Key
+    url = st.secrets["api"]["url"]
+    api_key = st.secrets["api"]["api_key"]
+
+    # Define the headers including the API key
+    headers = {
+        "access_token": api_key,
+        "Content-Type": "application/json"
+    }
+    
     # Call the API with all parameters
     data = {
         "data_inicial": date.today().strftime("%Y-%m-%d"),
@@ -25,7 +35,7 @@ if st.button('Simular'):
         "data_desconto": st.secrets["api"]["data_desconto"]
     }
     
-    response = requests.post('https://api-ksh6.onrender.com/simulador', json=data)
+    response = requests.post(url, headers=headers, json=data)
 
     def format_currency(value):
         return 'R$ ' + f'{value:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
