@@ -58,8 +58,8 @@ if st.button('Simular'):
         }
 
         # Adiciona a linha da taxa de estruturação ao final do DataFrame
-        linha_taxa_estruturacao_df = pd.DataFrame([linha_taxa_estruturacao])
-        df = pd.concat([df, linha_taxa_estruturacao_df], ignore_index=True)
+        #linha_taxa_estruturacao_df = pd.DataFrame([linha_taxa_estruturacao])
+        #df = pd.concat([df, linha_taxa_estruturacao_df], ignore_index=True)
 
         df = df[['pmt', 'Periodicidade', 'Parcela']]
         df.rename(columns={'pmt': 'Parcela', 'Periodicidade': 'Vencimento', 'Parcela': 'Valor da Parcela'}, inplace=True)
@@ -84,7 +84,6 @@ if st.button('Simular'):
         st.markdown(
             """
             <small><br>Taxas de juros podem ser alteradas sem aviso prévio.<br></small>
-            <small><br>Nosso financiamento está condicionado a uma taxa de estruturação de 4% do valor financiado, onde estão incorridos custos operacionais como registro em cartório da alienação do bem, registro na B3, apólice do seguro e rastreador durante a duração do financiamento.<br></small>
             <small><br>Liberação dos recursos somente após:</small>
             <small><ul><li>Pagamento da Estruturação</li><li>Pagamento da Entrada (caso haja)</li></ul></small>
             """,
